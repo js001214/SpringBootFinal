@@ -90,7 +90,7 @@ JPA는 DB의 테이블 컬럼이 수정, 생성, 삭제 가 빈번하게 발생�
  		JPA Entity 클래스 실습 , JPA 메소드를 사용해서 CRUD, save(), findAll(),
  		
  아래 내용의 JPA Entity 클래스를 생성 하세요.
- 테이블명 : user
+ 테이블명 : users
  	idx primary key, 자동증가(1,1)
  	name varchar(100)
  	pass varchar(100)
@@ -115,3 +115,48 @@ JPA는 DB의 테이블 컬럼이 수정, 생성, 삭제 가 빈번하게 발생�
  	
  	sbb2프로젝트 폴더 압축 : 조명_이름.zip
  	업로드URL : https://url.kr/u86s1c
+ 	
+ 	
+ 	======================================================
+ 	Service 클래스 : 비즈니스 로직을 처리함.
+ 		- 규모가 큰 사이트에서 비즈니스 로직을 간략하게 처리 할 수 있다.
+ 		- 유지 보수가 빈번한 경우 유지 보수를 쉽게 구현 할 수 있다.
+ 		- 보안을 강화 할 수 있다.
+ 		
+ 	Client ===> Controller ==> Service(비즈니스 로직처리, dto, DAO) ==> DAO ==> DB
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	sbb2프로젝트 폴더 압축 : 조명_이름.zip
+ 	업로드URL : https://url.kr/u86s1c
+ 	
+ 	
+ 	테이블명 : users
+ 	idx primary key, 자동증가(1,1)
+ 	name varchar(100)
+ 	pass varchar(100)
+ 	email varchar(200)
+ 	regadate LocalDateTime
+ 	cnt int
+ 	
+ 	
+ 	
+ 	<실습> sbb2	:	<userController> <Service>	<Repository>
+ 	users 테이블에 1000개의 값을 insert
+ 	name : "이름 - " + 숫자
+ 	pass : "pass1"
+ 	email : "메일주소 - " + 숫자
+ 	regdate : 현재 날짜
+ 	cnt : 번호
+ 	
+ 	
+  client 요청 : http://localhost:0000/user_detail/1
+  view page : users_detail.html
+
+  view page : user_insert.html
+  http://localhost:0000/user_insert
+ 	
+ 	
+ 	

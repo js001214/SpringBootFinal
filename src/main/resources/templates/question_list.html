@@ -11,25 +11,28 @@
 	<table>
 		<tr> 
 			<th> 제목 </th>
-			<th> 내용 </th>
+			
 			<th> 작성일시 </th>
 		</tr>
 		
 		<!-- 타임리프(Thymeleaf) 를 사용해서 루프 돌려서 출력 -->
 		<!-- Model변수에 있는 question_list를 가져온다. -->
 		<!-- 타임리프는 백엔드에 있는 내용을 프론트에 찍어줄 수 있다. -->
-		<!--  
-		<tr th:each="question : ${questionList}"> 
-			<td th:text="${question.subject}"> </td>
-			<td th:text="${question.content}"> </td>
+		 <!--  
+		<tr th:each="question : ${questionList}"> 	 "question : 은 List객체를 끄집어내는 변수 
+			<td> 
+				<a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}"></a>
+			</td>
 			<td th:text="${question.createDate}"> </td>		
 		</tr>
 		-->
 		
+		<!-- Thymeleaf에서 링크를 처리 : @{} -->
+		<!-- | String + 변수| : 문자열과 변수를 연결할때 씀-->
+		
 		<tr th:each="question : ${questionList}"> 
-			<td> [[${question.subject}]] </td>
-			<td> [[${question.content}]] </td>
-			<td> [[${question.createDate}]] </td>		
+			<td> <a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}">[[${question.subject}]] </a></td>
+			<td> [[${question.createDate}]] </td>	
 		</tr>
 		
 		
