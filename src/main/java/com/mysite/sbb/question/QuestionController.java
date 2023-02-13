@@ -5,11 +5,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mysite.sbb.answer.AnswerForm;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor	//final 필드의 생성자를 자동으로 만들어서 생성자를 만
@@ -61,7 +66,7 @@ public class QuestionController {
 	//변수값이 들어오고 PathVariable이 처리한다. 들어오는 변수의 값을 Integer id 에 저장
 	//상세 페이지를 처리하는 메소드 : /question/detail/1
 	@GetMapping(value = "/question/detail/{id}")
-	public String detail(Model model, @PathVariable("id") Integer id) {
+	public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm) {
 		// 서비스 클래스의 메소드 호출 : 상세페이지 보여 달라
 		
 		Question q =
@@ -71,4 +76,29 @@ public class QuestionController {
 		model.addAttribute("question", q);
 		return "question_detail";	//template : question_detail.html
 	}
+	
+	//메소드이름이 같아도 매개변수가 다르면 다른 메소드로 인식한다.
+	@GetMapping("/question/create")
+	public String questionCreate(QuestionForm questionFrom) {
+		return "question_form";
+	}
+	
+	@PostMapping("/question/create")
+	public String questionCreate(
+			//@RequestParam String subject,@RequestParam String content
+			@Valid QuestionForm questionFrom, BindingResult bindingResult)
+			{
+				if (bindingResult.hasErrors()) {
+					return "question_form";
+				}
+		//로직 작성부분 (Service에서 로직을 만들어서 작동
+		//this.questionService.create(subject, content);
+		
+				this.questionService.create(questionFrom.getSubject(), questionFrom.getContent());
+				
+				
+		//값을 DB에 저장후 List 페이지로 리다이렉트 (질문 목록으로 이동)
+		return "redirect:/question/list";
+	}
+	
 }

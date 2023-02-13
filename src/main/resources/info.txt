@@ -158,5 +158,17 @@ JPA는 DB의 테이블 컬럼이 수정, 생성, 삭제 가 빈번하게 발생�
   view page : user_insert.html
   http://localhost:0000/user_insert
  	
- 	
+
+//Spring Framework를 사용한 폼 태그 내의 유효성 검사
+
+1. 라이브러리 등록:
+	bulid.gradle에 등록
+		//spring 에서 제공해주는 유효성 검사 라이브러리 : form에서 반값이나 글자수 제한
+		implements  'org.srpingframework.boot:spring=boot=starter-validation'
+		
+2. 유효성 검사 클래스 생성 (Question.java), @NotEmpty (message="오류메시지")
+	@Getter
+	@Setter
+	
+	유ㅛ성 검사 필드 : subject, content
  	
