@@ -1,4 +1,4 @@
-package com.mysite.sbb;
+package com.mysite.sbb.hello;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
