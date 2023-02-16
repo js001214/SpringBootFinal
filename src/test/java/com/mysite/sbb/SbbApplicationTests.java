@@ -14,11 +14,15 @@ import com.mysite.sbb.answer.Answer;
 import com.mysite.sbb.answer.AnswerRepository;
 import com.mysite.sbb.question.Question;
 import com.mysite.sbb.question.QuestionRepository;
+import com.mysite.sbb.question.QuestionService;
 
 import jakarta.transaction.Transactional;
 
 @SpringBootTest
 class SbbApplicationTests {
+	
+	@Autowired
+	private QuestionService questionService;
 	
 	@Autowired    //객체 자동 주입 , JPA의 CRUD할수 있는 메소드가 적용되어 있음. 
 	private QuestionRepository questionRepository; 
@@ -243,9 +247,10 @@ class SbbApplicationTests {
 		/*
 		for (Question q : or ) {
 			System.out.println(q);
+			}
 		}
 		*/
-	}							
+								
 	/* 두컬럼을 or 연산으로 검색 : subject, content
 	@Test
 	public void testjpa2() {
@@ -342,5 +347,24 @@ class SbbApplicationTests {
 		q2.setCreateDate(LocalDateTime.now());   // 현재 시간을 setter에 저장 
 		this.questionRepository.save(q2); 
 				
+		}*/
+	
+	@Test
+	void testJpa() {
+	
+		for (int i = 1; i <= 300; i++) {
+			
+			String subject = String.format("테스트 데이터입니다:[%03d]", i);
+		
+			String content = "내용무";
+			
+			this.questionService.create(subject, content, null);
+		
+		}
+		
+		
 	}
-	*/
+
+}
+
+

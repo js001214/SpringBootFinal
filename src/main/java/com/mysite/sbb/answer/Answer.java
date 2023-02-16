@@ -3,6 +3,7 @@ package com.mysite.sbb.answer;
 import java.time.LocalDateTime;
 
 import com.mysite.sbb.question.Question;
+import com.mysite.sbb.user.SiteUser;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,4 +32,7 @@ public class Answer {
 	private Question question;    //부모테이블이 Question 테이블의 Primary Key 를 참조 (id) 
 						//question_id
 	
+	@ManyToOne
+	 private SiteUser author;	//글쓴이 속성 author
+
 }

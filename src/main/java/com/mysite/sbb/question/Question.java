@@ -4,6 +4,7 @@ import java.time.LocalDateTime;   //자신의 시스템의 로케일의 시간�
 import java.util.List;
 
 import com.mysite.sbb.answer.Answer;
+import com.mysite.sbb.user.SiteUser;
 
 import jakarta.persistence.CascadeType; 
 
@@ -13,6 +14,7 @@ import jakarta.persistence.Entity;   //JPA 에서 적용된 어노테이션
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
@@ -46,5 +48,9 @@ public class Question {// Entity를 붙이면 Question이 테이블이 된다.
 	private List<Answer> answerList;  
 	
 		//question.getAnswerList() ; 
+	
+	@ManyToOne
+	private SiteUser author;
+		//author은 Question과 Anwer 엔티티에 "글쓴이"에 해당되는 속성이다.
 		
 }

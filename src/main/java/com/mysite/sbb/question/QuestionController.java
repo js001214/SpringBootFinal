@@ -1,6 +1,6 @@
 package com.mysite.sbb.question;
 
-import java.util.List;
+import java.security.Principal;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mysite.sbb.answer.AnswerForm;
+import com.mysite.sbb.user.SiteUser;
+import com.mysite.sbb.user.UserService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +47,7 @@ public class QuestionController {
 	//private final QuestionRepository questionrepository;	//Question..클래스 question..객체
 	private final QuestionService questionService;
 	
+	private final UserService userService;
 //	@GetMapping("/question/list") //http://localhost:9292/question/list
 //	@PostMapping("/question/list") //Form 태그의 method=post action = "/question/list";
 	//@ResponseBody		//요청을 브라우저에 출력 //question_list라고 요청했을때 String값이 브라우저에 출력
@@ -105,18 +108,22 @@ public class QuestionController {
 		return "question_form";
 	}
 	
+	
+	
 	@PostMapping("/question/create")
 	public String questionCreate(
 			//@RequestParam String subject,@RequestParam String content
-			@Valid QuestionForm questionForm, BindingResult bindingResult)
+			@Valid QuestionForm questionForm, BindingResult bindingResult, Principal principal)
 			{
 				if (bindingResult.hasErrors()) {
 					return "question_form";
 				}
-		//로직 작성부분 (Service에서 로직을 만들어서 작동
-		//this.questionService.create(subject, content);
 		
-				this.questionService.create(questionForm.getSubject(), questionForm.getContent());
+				SiteUser siteUser = this.userService.getUser(principal.getName());
+				
+				//로직 작성부분 (Service에서 로직을 만들어서 작동
+		//this.questionService.create(subject, content, siteUser);		
+				this.questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUser);
 				
 				
 		//값을 DB에 저장후 List 페이지로 리다이렉트 (질문 목록으로 이동)
