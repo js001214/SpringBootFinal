@@ -52,5 +52,10 @@ public class Question {// Entity를 붙이면 Question이 테이블이 된다.
 	@ManyToOne
 	private SiteUser author;
 		//author은 Question과 Anwer 엔티티에 "글쓴이"에 해당되는 속성이다.
+	
+	private LocalDateTime modifyDate;
+		//수정 일시를 의미하는 modifydate 속성
+	
+	
 		
 }

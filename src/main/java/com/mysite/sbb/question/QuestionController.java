@@ -3,6 +3,8 @@ package com.mysite.sbb.question;
 import java.security.Principal;
 
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.mysite.sbb.answer.AnswerForm;
 import com.mysite.sbb.user.SiteUser;
@@ -102,14 +105,17 @@ public class QuestionController {
 		return "question_detail";	//template : question_detail.html
 	}
 	
+	@PreAuthorize("isAuthenticated()")
 	//메소드이름이 같아도 매개변수가 다르면 다른 메소드로 인식한다.
 	@GetMapping("/question/create")
 	public String questionCreate(QuestionForm questionform) {
 		return "question_form";
 	}
 	
+	//@PreAuthorize("isAuthenticated()")이 붙은 메소드는 로그인이 필요한 메소드를
+	//의미한다. 적용된 메소드가 로그아웃 상태에서 호출되면 로그인 페이지로 이동된다.
 	
-	
+	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/question/create")
 	public String questionCreate(
 			//@RequestParam String subject,@RequestParam String content
@@ -130,4 +136,51 @@ public class QuestionController {
 		return "redirect:/question/list";
 	}
 	
+	@PreAuthorize("isAuthenticated()")
+	
+	@GetMapping("/modify/{id}")
+	
+	public String questionModify(@Valid QuestionForm questionForm, BindingResult bindingResult,
+			
+				@PathVariable("id") Integer id, Principal principal) {
+		
+		if (bindingResult.hasErrors()) {
+			
+			return "question_form";
+		}
+		
+		
+		Question question = this.questionService.getQuestion(id);
+		
+		if(!question.getAuthor().getUsername().equals(principal.getName())) {
+			
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+			
+		}
+		
+		this.questionService.modify(question, questionForm.getSubject(), questionForm.getContent());
+		
+		return String.format("redirct:/question/detail/%s", id);
+	
+	}
+	
+	@PreAuthorize("isAuthenticated()")
+	
+	@GetMapping("/delete/{id}")
+	
+	public String questionDelete(Principal principal, @PathVariable("id") Integer id) {
+		
+		Question question = this.questionService.getQuestion(id);
+		
+		if (!question.getAuthor().getUsername().equals(principal.getName())) {
+			
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
+			
+		};
+		
+		this.questionService.delete(question);
+		
+		return "redirect:/";
+		
+	}
 }

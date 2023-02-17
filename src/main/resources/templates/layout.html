@@ -2,14 +2,16 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1.0, shirnk-to-fit=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, shirnk-to-fit=no">
 <!-- Bootstrap CSS Import -->
 <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
 
-<title>템플릿 html (view 페이지생성시 기본적용)</title>
+<!-- sbb CSS -->
+
+<link rel="stylesheet" type="text/css" th:href="@{/style.css}">
+
+<title>Hello, sbb!</title>
 </head>
 <body>
 	<!-- 최상단의 네비게이션 바 (Nav Bar) -->
@@ -21,9 +23,12 @@
 	<th:blobk layout:fragment="content"></th:blobk>
 	<!-- 기본 템플릿에 삽입될 내용 - END -->
 
-
 	<!-- 부트스트랩 자바 스크립트 import -->
 	<script th:src="@{/bootstrap.min.js}"></script>
+	
+	<!-- 자바스크립트 Start -->
+	<th:block layout:fragment="script"></th:block>
+	<!-- 자바스크립트 End -->
 	
 
 </body>

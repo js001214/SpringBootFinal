@@ -1,10 +1,16 @@
 <html layout:decorate="~{layout}">
+
 <div layout:fragment="content" class="container">
+
 <h5 class="my-3 border-bottom pd-2">
 	질문 등록
 </h5>
+<!-- th:action 속성을 삭제하면 csrf 값이 자동 생산 x , csrf 생산하기 위해선 hidden 형태의 input을 수동으로 추가 -->
+<!-- form 태그에 th:action이 없으면 현재 URL을 기준으로 전송이 된다.-->
+<form th:object="${questionForm}" method="post">
 
-<form th:action="@{/question/create}" th:object="${questionForm}" method="post">
+	<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
 
 	<!-- 오류 메세지 출력 부분 -->
 	<!-- 외부 파일에서 import ~{파일명::태그이름} -->
@@ -12,17 +18,23 @@
 
 	<div class="mb-3">
 		<label for="subject" class="form-lable">제목</label>
-		<input type="text" name="subject" th:field="*{subject}" id="subject" class="form-controll">
+		
+		<input type="text" th:field="*{subject}" id="subject" class="form-control">
 	
 	</div>
 	
 	<div class="mb-3">
 		<label for="content" class="form-lable">내용</label>
-		<textarea name="content" th:field="*{content}" id="content" class="form-controll" rows=10></textarea>
+		
+		<textarea th:field="*{content}" class="form-control" rows=10></textarea>
 	
 	</div>
+	
+	
 	<input type="submit" value="저장하기" class="btn btn-primary my-2">
 
 </form>
-	</div>
+
+</div>
+
 </html>

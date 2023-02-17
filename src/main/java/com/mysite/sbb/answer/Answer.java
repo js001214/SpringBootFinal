@@ -34,5 +34,8 @@ public class Answer {
 	
 	@ManyToOne
 	 private SiteUser author;	//글쓴이 속성 author
+	
+	 private LocalDateTime modifyDate;
+	//수정 일시를 의미하는 modifydate 속성
 
 }
