@@ -5,3 +5,14 @@
 ### h3 태그가 적용
 
 #### h4 태그입니다.
+
+## 글자 강조 테스트 입니다.
+
+i just love **bold text**.
+
+i just love _blod text_.
+
+This is really***very***important text.
+
+
+ Dorothy followed her through many of the beautiful rooms in her castle.
