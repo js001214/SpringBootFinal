@@ -31,3 +31,8 @@ Try to put a blank line before...
 
 My favorite search engine is [Duck Duck Go](https://duckduckgo.com "The best search engine for privacy").
 
+##URL
+
+<https://www.markdownguide.org>
+
+<fake@example.com>
