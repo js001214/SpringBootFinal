@@ -23,3 +23,6 @@ Try to put a blank line before...
 > This is a blockquote
 
 ...and after a blockquote.
+
+
+---
