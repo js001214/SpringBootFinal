@@ -70,7 +70,6 @@ public class AnswerController {
 	//URL의 답변 아이디를 통해 조회한 답변 데이터의 "내용"을 AnswerForm 객체에 대입하여
 	//answer_form.html 템플릿에서 사용할수 있도록 했다.
 	@PreAuthorize("isAuthenticated()")
-	
 	@GetMapping("/modify/{id}")
 	
 	public String answerModify(AnswerForm answerForm, @PathVariable("id") Integer id, Principal principal) {
@@ -90,7 +89,6 @@ public class AnswerController {
 	}
 	
 	@PreAuthorize("isAuthenticated()")
-	
 	@PostMapping("/modify/{id}")
 	
 	public String answerModify(@Valid AnswerForm answerForm, BindingResult bindingResult,
@@ -112,8 +110,7 @@ public class AnswerController {
 		
 		this.answerService.modify(answer, answerForm.getContent());
 		
-		return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
-		
+		return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());		
 		}
 		
 	}
