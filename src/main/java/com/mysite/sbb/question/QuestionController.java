@@ -72,18 +72,21 @@ public class QuestionController {
 	//@2월 14일 페이징 처리를 위해 수정됨
 	// http://localhost:9292/questioin/list/?page=0
 	@GetMapping("/question/list")
-	public String list(Model model, @RequestParam (value="page", defaultValue="0") int page) {
+	public String list(Model model, @RequestParam (value="page", defaultValue="0") int page, @RequestParam(value = "kw", defaultValue = "") String kw) {
 								//Param으로 변수가 value로 넘어오고, 아무것도 안 넘어오면 page변수에 0이 들어간다. 마지막에 int page로 변환
 	
 		
-		
+		//검색어에 해당하는 kw 파라미터를 추가했고 디폴트값으로 빈 문자열을 설정했다. 
 		
 	// 비즈니스 로직 처리 :
 	Page<Question> paging =
-		this.questionService.getList(page);
+		this.questionService.getList(page, kw);
 		
 		//model 객체에 결과로 받은 paging 객체를 client로 전송
 		model.addAttribute("paging",paging);
+		
+		model.addAttribute("kw", kw);
+		
 	
 		return "question_list";
 	}
@@ -179,9 +182,10 @@ public class QuestionController {
         return String.format("redirect:/question/detail/%s", id);
     }
 	
+    
 	@PreAuthorize("isAuthenticated()")
 	
-	@GetMapping("/delete/{id}")
+	@GetMapping("/question/delete/{id}")
 	
 	public String questionDelete(Principal principal, @PathVariable("id") Integer id) {
 		
@@ -198,4 +202,14 @@ public class QuestionController {
 		return "redirect:/";
 		
 	}
+	
+	@PreAuthorize("isAuthenticated()") //로그인한 사람만 추천 가능
+	@GetMapping("/question/vote/{id}")
+	 public String questionVote(Principal principal, @PathVariable("id") Integer id) {
+	 Question question = this.questionService.getQuestion(id);
+	 SiteUser siteUser = this.userService.getUser(principal.getName());
+	 this.questionService.vote(question, siteUser);
+	 return String.format("redirect:/question/detail/%s", id);
+	 }
+	
 }

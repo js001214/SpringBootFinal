@@ -5,56 +5,79 @@
 	<h2 class="border-bottom py-2" th:text="${question.subject}"></h2>
 	<div class="card my-3">
 	
-		<div class="card-body">
+		<div class="card-body">	<!-- 마크다운으로 변환된 HTML 문서를 제대로 표시하라면 th:utext를 사용한다. -->
 		
-			<div class="card-text" style="white-space: pre-line;" th:text="${question.content}"></div>
+			<div class="card-text" th:utext="${@commonUtil.markdown(question.content)}"></div>
 			
 			<div class="d-flex justify-content-end">
-			
+
+				<div th:if="${question.modifyDate != null}"
+					class="badge bg-light text-dark p-2 text-start mx-3">
+					<div class="mb-2">modified at</div>
+					<div th:text="${#temporals.format(question.modifyDate, 'yyyy-MM-dd HH:mm')}"></div>
+				</div>
+				
 				<div class="badge bg-light text-dark p-2 text-start">
-					
-					<div class="mb-2">
-					
-						<span th:if="${question.author != null}" th:text="${question.author.username}"></span>
-					
+
+
+
+					<div th:if="${question.modifyDate != null}"
+						class="badge bg-light text-dark p-2 text-start mx-3">
+
+						<div class="mb-2">
+
+							<span th:if="${question.author != null}" th:text="${question.author.username}"></span>
+
+						</div>
+
+
+
+						<div th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}"></div>
+
 					</div>
-					
-					
-					
-					<div th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}"></div>
+
+				</div>
+
+
+
+				<div class="my-3">
+					<a href="javascript:void(0);" class="recommend btn btn-sm btn-outline -secondary"
+						th:data-url="@{|/question/vote/${question.id}|}"> 
 						
-			</div>
-	
-		</div>
-		
-		<div class="my-3">
-		
-			<a th:href="@{|/question/modify/${question.id}|}" class="btn btn-sm btn-outline-secondary"
-				
-				sec:authorize="isAuthenticated()"
-				
-				th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.username}"
+						추천 
+						
+						<span class="badge rounded-pill bg-success" th:text="${#lists.size(question.voter)}">
+						</span>
+						
+					</a>
 					
-				th:text="수정"></a>
-				<!-- 로그인한 사용자와 글쓴이가 다르다면 수정 버튼은 보이지 않는다. -->	
-				
-				<!-- 삭제 버튼은 href 속성값을 javascript:void(0)로 설정했다. -->
-				<a href="javascript:void(0);" th:data-url="@{|/question/delete/${question.id}|}"
-				
-					class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
-				
-					th:if="${question.author !=null and #authentication.getPrincipal().getUsername() == question.author.username}"
+					<a th:href="@{|/question/modify/${question.id}|}" class="btn btn-sm btn-outline-secondary"
+						sec:authorize="isAuthenticated()"
+						
+						th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.username}"
+
+						th:text="수정"></a> 
+						
+						
+						<a href="javascript:void(0);" th:data-url="@{|/question/delete/${question.id}|}"
+						class="delete btn btn-sm btn-outline-secondary"
+						sec:authorize="isAuthenticated()"
+						th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.username}"
+						th:text="삭제"></a>
+
+				</div>
 		
-					th:text="삭제"></a>
-		
-		</div>
+	</div>
 	<!-- 답변의 갯수 표시 -->
 	<h5 class="border-bottom my-3 py-2"
 		th:text="|${#lists.size(question.answerList)}개의 답변이 있습니다.|"></h5>
 	<!-- 답변 반복 시작 -->
 	<div class="card my-3" th:each="answer : ${question.answerList}">
+		
+		<a th:id="|answer_${answer.id}|"></a>	<!--  답변 앵커. <a id="test"></a> 해당 앵커로 스크롤 이동 -->
+		
 		<div class="card-body">
-			<div class="card-text" style="white-space: pre-line;" th:text="${answer.content}"></div>
+			<div class="card-text" th:utext="${@commonUtil.markdown(answer.content)}"></div>
 			
 			<div class="d-flex justify-content-end">
 			
@@ -70,14 +93,43 @@
 			
 			<div class="my-3">
 			
-				<a th:href="@{|/answer/modify/${answer.id}|}" class="btn btn-sm btn-outline-secondary"
-			
-					sec:authorize="isAuthenticated()"
+				<a href="javascript:void(0);" class="recommend btn btn-sm btn-outline-secondary"
+				
+					th:data-url="@{|/answer/vote/${answer.id}|}">
 					
-					th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}"
+					추천
+
+
+					<span class="badge rounded-pill bg-success" th:text="${#lists.size(answer.voter)}"></span>					
 					
-					th:text="수정"></a>
-			</div>
+					</a>
+
+						<a th:href="@{|/answer/modify/${answer.id}|}"
+						
+							class="btn btn-sm btn-outline-secondary"
+							
+							sec:authorize="isAuthenticated()"
+							
+							th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}"
+							
+							th:text="수정"> </a> 
+							
+							
+							<a href="javascript:void(0);"
+							
+							th:data-url="@{|/answer/delete/${answer.id}|}"
+							
+							class="delete btn btn-sm btn-outline-secondary"
+							
+							sec:authorize="isAuthenticated()"
+							
+							th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}"
+							
+							th:text="삭제"></a>
+
+
+
+					</div>
 			
 		</div>
 		
@@ -93,10 +145,9 @@
 		<!-- 외부 파일에서 import   -->
 		<div th:replace="~{form_errors::formErrorsFragment}"></div>
 
-		<textarea sec:authorize="isAnonymous()" disabled th:field="*{content}"
-			class="form-control" rows="10"></textarea>
-		<textarea sec:authorize="isAuthenticated()" disabled
-			th:field="*{content}" class="form-control" rows="10"></textarea>
+ <textarea sec:authorize="isAnonymous()" disabled th:field="*{content}" class="form-control" rows="10"></textarea>
+ <textarea sec:authorize="isAuthenticated()" th:field="*{content}" class="form-control" rows="10"></textarea>
+ 
 		<!-- sec:authorize="isAnonymous()"- 현재 로그아웃 상태 -->
 		<!-- sec:authorize="isAuthenticated()"- 현재 로그인 상태 -->
 		<!-- 수정 끝!! -->
@@ -120,6 +171,24 @@
 			});
 		
 		});
+		
+		const recommend_elements = document.getElementsByClassName("recommend");
+		
+		Array.from(recommend_elements).forEach(function(element) {
+		
+			element.addEventListener('click', function() {
+		 
+				if(confirm("정말로 추천하시겠습니까?")) {
+		 
+					location.href = this.dataset.url;
+		 
+				};
+		 
+			});
+		
+		});
+		
+		
 	</script>
 	
 

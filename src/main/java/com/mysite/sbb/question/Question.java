@@ -2,6 +2,7 @@ package com.mysite.sbb.question;
 
 import java.time.LocalDateTime;   //자신의 시스템의 로케일의 시간설정 
 import java.util.List;
+import java.util.Set;
 
 import com.mysite.sbb.answer.Answer;
 import com.mysite.sbb.user.SiteUser;
@@ -14,6 +15,7 @@ import jakarta.persistence.Entity;   //JPA 에서 적용된 어노테이션
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
@@ -56,6 +58,10 @@ public class Question {// Entity를 붙이면 Question이 테이블이 된다.
 	private LocalDateTime modifyDate;
 		//수정 일시를 의미하는 modifydate 속성
 	
+	@ManyToMany
 	
-		
+	//Set은 중복을 허용하지 않는 자료형이다. voter : 추천인 속성을 추가
+	Set<SiteUser> voter;
+	
+
 }

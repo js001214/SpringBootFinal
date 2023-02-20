@@ -54,15 +54,17 @@ public class AnswerController {
 		
 		//content의 값이 비어 있을때 
 		if (bindingResult.hasErrors()){ 
+			
 			model.addAttribute("question", question);
+			
 			return "question_detail";
 		}		
 		
 		//답변 내용을 저장하는 메소드 호출 (Service에서 호출)
-		this.answerService.create(question, answerForm.getContent(), siteUser);
+		Answer answer = this.answerService.create(question, answerForm.getContent(), siteUser);
 		
 		//requestparam을쓰고  question_detail에 있는 id,name="content"를 받아온다.
-		return String .format("redirect:/question/detail/%s", id);
+		return String .format("redirect:/question/detail/%s#answer_%s", answer.getQuestion().getId(), answer.getId());
 							//redirect는 클라이언트가 서버에 새롭게 요청하는 것이다.
 	}
 	
@@ -110,13 +112,44 @@ public class AnswerController {
 		
 		this.answerService.modify(answer, answerForm.getContent());
 		
-		return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());		
+		return String.format("redirect:/question/detail/%s#answer_%s", answer.getQuestion().getId(), answer.getId());		
 		}
+	
+	
+    //답변 삭제 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/delete/{id}")
+    public String answerDelete(Principal principal, @PathVariable("id") Integer id) {
+    	
+        Answer answer = this.answerService.getAnswer(id);
+        
+        if (!answer.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
+        }
+        
+        this.answerService.delete(answer);
+        
+        return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
+    }
+    
+    
+    @PreAuthorize("isAuthenticated()")
+    
+    @GetMapping("/vote/{id}")
+    
+    public String answerVote(Principal principal, @PathVariable("id") Integer id) 
+    {
+    	Answer answer = this.answerService.getAnswer(id);
+    	
+    	SiteUser siteUser = this.userService.getUser(principal.getName());
+    	
+    	this.answerService.vote(answer, siteUser);
+    	
+    	return String.format("redirect:/question/detail/%s#answer_%s", answer.getQuestion().getId(), answer.getId());
+    	
+    }
+}
 		
-	}
-			
-			
 	
-	
-	
+
 
